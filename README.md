@@ -28,7 +28,7 @@ CPN is a framework for object detection with deep convolutional neural networks.
 
 ## Architecture
 
-![Network_Structure](https://xxx/Network_Structure.jpg)
+![Network_Structure](https://github.com/Duankaiwen/CPNDet/blob/master/Architecture.png)
 
 ## AP(%) on COCO test-dev and Models  
 
