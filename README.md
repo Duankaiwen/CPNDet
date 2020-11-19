@@ -91,6 +91,12 @@ source activate CPN
 ## Installing some APIs
 
 ```
+cd code
+```
+
+and
+
+```
 python setup.py
 ```
 
@@ -125,10 +131,6 @@ python train.py --cfg_file DLA34
 We provide the configuration file `config/HG104.json`,  `config/HG52.json` and `config/DLA34.json` in this repo. If you want to train you own CPN, please adjust the batch size in corresponding onfiguration files to accommodate the number of GPUs that are available to you. Note that if you want train DLA34, you need to firstly download the [pre-trained model](http://dl.yf.io/dla/models/imagenet/dla34-ba72cf86.pth), and put it under `CPN/cache/nnet/DLA34/pretrain`.
 
 To use the trained model:
-
-```
-cd code
-```
 
 ```
 python test.py --cfg_file HG104 --testiter 220000 --split <split>
