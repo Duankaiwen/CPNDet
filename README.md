@@ -155,7 +155,7 @@ You need to download the corresponding models and put them under `CPN/cache/nnet
 
 You can add `--no_flip` for testing without flip augmentation.
 
-You can also add `--debug` to visualize some detection results (uncomment the codes from line 137 in `CPN/code/test/coco.py`).
+You can also add `--debug` to visualize some detection results (uncomment the codes from line 152 to 182 in `CPN/code/test/coco.py`).
 
 We also include a configuration file for multi-scale evaluation, which is `HG104-multi_scale.json` and `HG52-multi_scale.json` and `DLA34-multi_scale.json` in this repo, respectively. 
 
