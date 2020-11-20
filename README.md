@@ -24,7 +24,7 @@ CPN is a framework for object detection with deep convolutional neural networks.
 - At the training stage, we use 8 NVIDIA Tesla-V100 (32GB) GPUs on [HUAWEI CLOUD](https://www.huaweicloud.com/intl/zh-cn/) to train the network, the traing time is about 9 days, 5 days and 3 days for HG104, HG52 and DLA34, respectively.
 - Our code is written in Pytorch (the master branch works with **PyTorch 1.1.0**), based on [CornerNet](https://github.com/princeton-vl/CornerNet), [mmdetection](https://github.com/open-mmlab/mmdetection), [Objects as Points](https://github.com/xingyizhou/CenterNet) and [CenterNet](https://github.com/Duankaiwen/CenterNet).
 
-**If you encounter any problems in using our code, please contact Kaiwen Duan: kaiwenduan@outlook.com.**
+**If you encounter any problems in using our code, please contact Kaiwen Duan: kaiwenduan@outlook.com**
 
 ## Architecture
 
