@@ -3,8 +3,6 @@ import os
 coco_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data/coco/PythonAPI/")
 sys.path.insert(0, coco_path)
 
-import moxing as mox
-mox.file.shift('os', 'mox')
 import json
 import numpy as np
 import pickle
@@ -76,15 +74,15 @@ class MSCOCO(DETECTION):
         if not os.path.exists(self._cache_file):
             print("No cache file found...")
             self._extract_data()
-            with mox.file.File(self._cache_file, "wb") as f:
+            with open(self._cache_file, "wb") as f:
                 pickle.dump([self._detections, self._image_ids], f)
         else:
-            with mox.file.File(self._cache_file, "rb") as f:
+            with open(self._cache_file, "rb") as f:
                 self._detections, self._image_ids = pickle.loads(f.read())
 
     def _load_coco_data(self):
         self._coco = COCO(self._label_file)
-        with mox.file.File(self._label_file, "r") as f:
+        with open(self._label_file, "r") as f:
             data = json.loads(f.read())
 
         coco_ids = self._coco.getImgIds()
