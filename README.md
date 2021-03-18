@@ -1,4 +1,4 @@
-## Attention！I failed to open source the trained model! You may need to train by yourselves.
+##DTIQ - NCBiR implementation 
 
 # [Corner Proposal Network for Anchor-free, Two-stage Object Detection](https://arxiv.org/abs/2007.13816)
 
