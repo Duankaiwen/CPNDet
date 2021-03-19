@@ -19,9 +19,9 @@
         "stepsize": 200000,
         "snapshot": 5000,
 
-        "chunk_sizes": [6,6,6,6,6,6,6,6],
+        "chunk_sizes": [1],
         
-        "data_dir": "/home/ma-user/work"
+        "data_dir": "./data"
     },
     
     "db": {
@@ -42,7 +42,7 @@
         "test_scales": [1],
 
         "top_k": 70,
-        "categories": 80,
+        "categories": 1,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,

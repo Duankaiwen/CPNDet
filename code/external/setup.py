@@ -6,8 +6,7 @@ from Cython.Build import cythonize
 extensions = [
     Extension(
         "nms", 
-        ["nms.pyx"],
-        extra_compile_args=["-Wno-cpp", "-Wno-unused-function"]
+        ["nms.pyx"]
     )
 ]
 
