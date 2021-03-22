@@ -1,13 +1,13 @@
 {
     "system": {
         "dataset": "MSCOCO",
-        "batch_size": 48,
+        "batch_size": 20,
         "sampling_function": "kp_detection",
 
         "train_split": "trainval",
         "val_split": "minival",
 
-        "learning_rate": 0.00025,
+        "learning_rate": 0.0025,
         "decay_rate": 10,
 
         "val_iter": 100,
@@ -19,14 +19,14 @@
         "stepsize": 200000,
         "snapshot": 5000,
 
-        "chunk_sizes": [1],
+        "chunk_sizes": [5,5,5,5],
         
         "data_dir": "./data"
     },
     
     "db": {
-        "rand_scale_min": 0.6,
-        "rand_scale_max": 1.4,
+        "rand_scale_min": 0.7,
+        "rand_scale_max": 1.3,
         "rand_scale_step": 0.1,
         "rand_scales": null,
 
@@ -41,15 +41,15 @@
 
         "test_scales": [1],
 
-        "top_k": 70,
+        "top_k": 50,
         "categories": 1,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
-        "max_per_image": 100,
+        "max_per_image": 40,
         
         "featmap_strides": 1,
-        "roi_sample_num": 2,
+        "roi_sample_num": 1,
         "gr_threshold": 0.2,
         
         "merge_bbox": true,
