@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import os
 import pdb
-
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
 import json
 import torch
 import numpy as np
