@@ -37,7 +37,7 @@ from .kp_utils import _tranpose_and_gather_feat, _decode, _generate_bboxes, _htb
 BN_MOMENTUM = 0.1
 
 def get_model_url(data='imagenet', name='dla34', hash='ba72cf86'):
-    return join('http://dl.yf.io/dla/models', data, '{}-{}.pth'.format(name, hash))
+    return "http://dl.yf.io/dla/models/imagenet/dla34-ba72cf86.pth"
 
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -329,7 +329,7 @@ def dla34(pretrained=True, **kwargs):  # DLA-34
                 [16, 32, 64, 128, 256, 512],
                 block=BasicBlock, **kwargs)
     if pretrained:
-        model.load_pretrained_model(data='../cache/nnet/DLA34/pretrain/', name='dla34-ba72cf86.pth', hash='ba72cf86')
+        model.load_pretrained_model(data='../cache/nnet/DLA34/pretrain/', hash='ba72cf86')
     return model
 
 class Identity(nn.Module):

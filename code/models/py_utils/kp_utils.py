@@ -145,7 +145,7 @@ def _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, gr_thresh
     grouping_scores = grouping_scores[:,0,0,0]
     batch  = tl_clses.size(0)
     region_scores = region_scores.squeeze()
-    
+    print(region_scores)
     ht_scores = ht_boxes[:,:,-1].unsqueeze(-1)
     clses = tl_clses.contiguous().view(batch, -1, 1).float()
     
@@ -155,8 +155,8 @@ def _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, gr_thresh
     
     pos_grouping_score_inds = grouping_scores >= gr_threshold
     ppos_ht_score_cls = pos_ht_score_cls[pos_grouping_score_inds]
-    print(ppos_ht_score_cls.shape)
-    specific_rscores = region_scores.gather(1, ppos_ht_score_cls[:,1].long()).squeeze()
+    print(ppos_ht_score_cls[:,1].long())
+    specific_rscores = region_scores.gather(1, ppos_ht_score_cls.long().unsqueeze(-1)).squeeze()
     #specific_rscores[specific_rscores<0.1] = 0
     
     ppos_ht_score_cls[:,0] = (ppos_ht_score_cls[:,0] + 0.5)* (specific_rscores + 0.5) - 0.25
