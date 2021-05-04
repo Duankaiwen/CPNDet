@@ -21,6 +21,6 @@ os.system(strs)
 strs = ('cd models/py_utils/bbox/nms && python setup.py install --user')
 os.system(strs)
 
-strs = ('pip install numpy==1.16.0')
-os.system(strs)
+# strs = ('pip install numpy==1.16.0')
+# os.system(strs)
 

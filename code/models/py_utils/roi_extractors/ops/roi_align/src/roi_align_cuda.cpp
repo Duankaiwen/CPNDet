@@ -1,7 +1,12 @@
 #include <torch/extension.h>
 
+#ifndef AT_CHECK
+#define AT_CHECK TORCH_CHECK
+#endif
+
 #include <cmath>
 #include <vector>
+
 
 int ROIAlignForwardLaucher(const at::Tensor features, const at::Tensor rois,
                            const float spatial_scale, const int sample_num,

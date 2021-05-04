@@ -1,6 +1,8 @@
 // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 #include <torch/extension.h>
-
+#ifndef AT_CHECK
+#define AT_CHECK TORCH_CHECK
+#endif
 template <typename scalar_t>
 at::Tensor nms_cpu_kernel(const at::Tensor& dets, const float threshold) {
   AT_ASSERTM(!dets.type().is_cuda(), "dets must be a CPU tensor");

@@ -1,6 +1,8 @@
 // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 #include <torch/extension.h>
-
+#ifndef AT_CHECK
+#define AT_CHECK TORCH_CHECK
+#endif
 #define CHECK_CUDA(x) AT_CHECK(x.type().is_cuda(), #x, " must be a CUDAtensor ")
 
 at::Tensor nms_cuda(const at::Tensor boxes, float nms_overlap_thresh);

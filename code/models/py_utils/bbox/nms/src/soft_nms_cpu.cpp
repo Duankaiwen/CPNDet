@@ -25,6 +25,9 @@
     "module_name": "mmdet.ops.nms.soft_nms_cpu"
 }
 END: Cython Metadata */
+#ifndef AT_CHECK
+#define AT_CHECK TORCH_CHECK
+#endif
 
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
