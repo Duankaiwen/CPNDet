@@ -2,7 +2,8 @@
 import os
 import pdb
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore")
+#warnings.filterwarnings("ignore", category=DeprecationWarning) 
 import json
 import torch
 import numpy as np

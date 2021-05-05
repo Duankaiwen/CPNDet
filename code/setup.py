@@ -1,10 +1,10 @@
 import os
 
-#strs = ('pip install mmcv==0.6.2')
-#os.system(strs)
+strs = ('pip install mmcv==0.6.2')
+os.system(strs)
 
-#strs = ('pip install terminaltables')
-#os.system(strs)
+strs = ('pip install terminaltables')
+os.system(strs)
 
 strs = ('cd models/py_utils/_cpools && python3 setup.py install --user')
 os.system(strs)

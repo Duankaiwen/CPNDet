@@ -21,6 +21,7 @@ class MSCOCO(DETECTION):
         cache_dir  = system_configs.cache_dir
 
         self._split = split
+        print("\n", split, "\n")
         self._dataset = {
             "trainval": "train",
             "minival": "valid",
@@ -30,7 +31,7 @@ class MSCOCO(DETECTION):
         self._coco_dir = os.path.join(data_dir, "coco")
 
         self._label_dir  = os.path.join(self._coco_dir, "annotations")
-        self._label_file = os.path.join(self._label_dir, "head_{}.json")
+        self._label_file = os.path.join(self._label_dir, "11classes_v1.0_{}.json")
         self._label_file = self._label_file.format(self._dataset)
 
         self._image_dir  = os.path.join(self._coco_dir, "images", self._dataset)
@@ -47,7 +48,7 @@ class MSCOCO(DETECTION):
         ], dtype=np.float32)
 
         self._cat_ids = [
-            0
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
         ]
         self._classes = {
             ind + 1: cat_id for ind, cat_id in enumerate(self._cat_ids)

@@ -1,7 +1,7 @@
 {
     "system": {
         "dataset": "MSCOCO",
-        "batch_size": 12,
+        "batch_size": 24,
         "sampling_function": "kp_detection",
 
         "train_split": "trainval",
@@ -19,7 +19,7 @@
         "stepsize": 20000,
         "snapshot": 3000,
 
-        "chunk_sizes": [6,6],
+        "chunk_sizes": [12,12],
         
         "data_dir": "./data"
     },
@@ -46,7 +46,7 @@
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
-        "max_per_image": 40,
+        "max_per_image": 50,
         
         "featmap_strides": 1,
         "roi_sample_num": 1,
