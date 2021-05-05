@@ -79,7 +79,7 @@ def _htbox2roi(detections, proposals, roi_lables, tag_lens):
                       if roi_lables[i].size(0) > 0 else gt_labels
            #unique 
            overlaps = bbox_overlaps(proposals[i][:,:4], proposals[i][:,:4])
-           new_proposal_inds = overlaps.new_full((overlaps.size(1), ), 0, dtype=torch.uint8)
+           new_proposal_inds = overlaps.new_full((overlaps.size(1), ), 0, dtype=torch.bool)
            max_overlaps, argmax_overlaps = overlaps.max(dim=0)
            new_proposal_inds[argmax_overlaps] = 1
            proposals[i] = proposals[i][new_proposal_inds]
