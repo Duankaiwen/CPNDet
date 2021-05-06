@@ -155,8 +155,9 @@ def _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, gr_thresh
     
     pos_grouping_score_inds = grouping_scores >= gr_threshold
     ppos_ht_score_cls = pos_ht_score_cls[pos_grouping_score_inds]
-    print(ppos_ht_score_cls[:,1].long())
-    specific_rscores = region_scores.gather(1, ppos_ht_score_cls.long().unsqueeze(-1)).squeeze()
+    #print(ppos_ht_score_cls[:,1].long())
+    #specific_rscores = region_scores.gather(1, ppos_ht_score_cls.long().unsqueeze(-1)).squeeze()
+    specific_rscores = region_scores.gather(1, ppos_ht_score_cls[:,1].long().unsqueeze(-1)).squeeze()
     #specific_rscores[specific_rscores<0.1] = 0
     
     ppos_ht_score_cls[:,0] = (ppos_ht_score_cls[:,0] + 0.5)* (specific_rscores + 0.5) - 0.25
@@ -172,8 +173,12 @@ def _decode(
 ):
     batch = tl_regr.size(0)
 
+#    bboxes = ht_boxes[:,:,:4]
+#    batch = tl_regr.size(0)
+    print(tl_regr.shape)
     bboxes = ht_boxes[:,:,:4]
-    
+    print(ht_boxes.shape)
+
     tl_ys = bboxes.view(batch, K, K, -1)[:,:,:,1]
     tl_xs = bboxes.view(batch, K, K, -1)[:,:,:,0]
     br_ys = bboxes.view(batch, K, K, -1)[:,:,:,3]
