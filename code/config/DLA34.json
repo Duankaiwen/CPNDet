@@ -13,7 +13,7 @@
         "val_iter": 100,
 
         "opt_algo": "adam",
-        "prefetch_size": 6,
+        "prefetch_size": 10,
 
         "max_iter": 2000,
         "stepsize": 1000,
@@ -42,7 +42,7 @@
         "test_scales": [1],
 
         "top_k": 50,
-        "categories": 1,
+        "categories": 11,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
