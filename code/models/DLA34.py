@@ -107,7 +107,7 @@ def make_hg_layer(kernel, dim0, dim1, mod, layer=convolution, **kwargs):
 
 class model(DLASeg):
     def __init__(self, db):
-        out_dim = 1
+        out_dim = 11 #TO DO: fix this hardcoding
         super(model, self).__init__(
             db, 1, 'dla34', out_dim, head_conv=256,
             pretrained=True,
