@@ -755,7 +755,7 @@ class DLASeg(nn.Module):
             region_scores    = _sigmoid(region_scores)
 
             if grouping_inds.float().sum() > 1:
-                print("-"*50)
+                print("-"*51)
                 print("more than one")
                 print(f"ht_boxes shape before {ht_boxes.shape}")
                  _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, self.gr_threshold)
