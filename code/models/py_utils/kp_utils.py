@@ -24,27 +24,35 @@ import torch.nn as nn
 import torch.nn.functional as F
 from .utils import convolution, residual
 
+
 class MergeUp(nn.Module):
     def forward(self, up1, up2):
         return up1 + up2
 
+
 def make_merge_layer(dim):
     return MergeUp()
+
 
 def make_tl_layer(dim):
     return None
 
+
 def make_br_layer(dim):
     return None
+
 
 def make_region_layer(dim):
     return None
 
+
 def make_pool_layer(dim):
     return nn.MaxPool2d(kernel_size=2, stride=2)
 
+
 def make_unpool_layer(dim):
     return nn.Upsample(scale_factor=2, mode='bilinear')
+
 
 def make_kp_layer(cnv_dim, curr_dim, out_dim):
     return nn.Sequential(
@@ -52,15 +60,18 @@ def make_kp_layer(cnv_dim, curr_dim, out_dim):
         nn.Conv2d(curr_dim, out_dim, (1, 1))
     )
 
+
 def make_inter_layer(dim):
     return residual(3, dim, dim)
+
 
 def make_cnv_layer(inp_dim, out_dim):
     return convolution(3, inp_dim, out_dim)
 
+
 def _gather_feat(feat, ind, mask=None):
-    dim  = feat.size(2)
-    ind  = ind.unsqueeze(2).expand(ind.size(0), ind.size(1), dim)
+    dim = feat.size(2)
+    ind = ind.unsqueeze(2).expand(ind.size(0), ind.size(1), dim)
     feat = feat.gather(1, ind)
     if mask is not None:
         mask = mask.unsqueeze(2).expand_as(feat)
@@ -68,23 +79,24 @@ def _gather_feat(feat, ind, mask=None):
         feat = feat.view(-1, dim)
     return feat
 
+
 def _htbox2roi(detections, proposals, roi_lables, tag_lens):
     for i in range(len(tag_lens)):
         if tag_lens[i] != 0:
-           proposals[i] = torch.cat((detections[i, :tag_lens[i],:5], proposals[i]), dim = 0) \
-                     if proposals[i].size(0) > 0 else detections[i, :tag_lens[i],:5]
-        
-           gt_labels     = roi_lables[i].new_full((tag_lens[i], ), 1, dtype=torch.float)
-           roi_lables[i] = torch.cat((gt_labels, roi_lables[i]), dim = 0) \
-                      if roi_lables[i].size(0) > 0 else gt_labels
-           #unique 
-           overlaps = bbox_overlaps(proposals[i][:,:4], proposals[i][:,:4])
-           new_proposal_inds = overlaps.new_full((overlaps.size(1), ), 0, dtype=torch.bool)
-           max_overlaps, argmax_overlaps = overlaps.max(dim=0)
-           new_proposal_inds[argmax_overlaps] = 1
-           proposals[i] = proposals[i][new_proposal_inds]
-           roi_lables[i] = roi_lables[i][new_proposal_inds]
-            
+            proposals[i] = torch.cat((detections[i, :tag_lens[i], :5], proposals[i]), dim=0) \
+                if proposals[i].size(0) > 0 else detections[i, :tag_lens[i], :5]
+
+            gt_labels = roi_lables[i].new_full((tag_lens[i],), 1, dtype=torch.float)
+            roi_lables[i] = torch.cat((gt_labels, roi_lables[i]), dim=0) \
+                if roi_lables[i].size(0) > 0 else gt_labels
+            # unique
+            overlaps = bbox_overlaps(proposals[i][:, :4], proposals[i][:, :4])
+            new_proposal_inds = overlaps.new_full((overlaps.size(1),), 0, dtype=torch.uint8)
+            max_overlaps, argmax_overlaps = overlaps.max(dim=0)
+            new_proposal_inds[argmax_overlaps] = 1
+            proposals[i] = proposals[i][new_proposal_inds]
+            roi_lables[i] = roi_lables[i][new_proposal_inds]
+
     rois_list = []
     for img_id, bboxes in enumerate(proposals):
         if bboxes.size(0) > 0:
@@ -109,6 +121,7 @@ def _htbox2roi_test(proposals):
     rois = torch.cat(rois_list, 0)
     return rois
 
+
 def _nms(heat, kernel=1):
     pad = (kernel - 1) // 2
 
@@ -116,24 +129,26 @@ def _nms(heat, kernel=1):
     keep = (hmax == heat).float()
     return heat * keep
 
+
 def _tranpose_and_gather_feat(feat, ind):
     feat = feat.permute(0, 2, 3, 1).contiguous()
     feat = feat.view(feat.size(0), -1, feat.size(3))
     feat = _gather_feat(feat, ind)
     return feat
 
+
 def _topk(scores, K=40):
     batch, cat, height, width = scores.size()
-      
+
     topk_scores, topk_inds = torch.topk(scores.view(batch, cat, -1), K)
 
     topk_inds = topk_inds % (height * width)
-    topk_ys   = (topk_inds / width).int().float()
-    topk_xs   = (topk_inds % width).int().float()
-      
+    topk_ys = (topk_inds / width).int().float()
+    topk_xs = (topk_inds % width).int().float()
+
     topk_score, topk_ind = torch.topk(topk_scores.view(batch, -1), K)
     topk_clses = (topk_ind / K).int()
-    topk_inds  = _gather_feat(
+    topk_inds = _gather_feat(
         topk_inds.view(batch, -1, 1), topk_ind).view(batch, K)
     topk_ys = _gather_feat(topk_ys.view(batch, -1, 1), topk_ind).view(batch, K)
     topk_xs = _gather_feat(topk_xs.view(batch, -1, 1), topk_ind).view(batch, K)
@@ -142,55 +157,50 @@ def _topk(scores, K=40):
 
 
 def _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, gr_threshold):
-    grouping_scores = grouping_scores[:,0,0,0]
-    batch  = tl_clses.size(0)
+    grouping_scores = grouping_scores[:, 0, 0, 0]
+    batch = tl_clses.size(0)
     region_scores = region_scores.squeeze()
-    print(region_scores)
-    ht_scores = ht_boxes[:,:,-1].unsqueeze(-1)
+
+    ht_scores = ht_boxes[:, :, -1].unsqueeze(-1)
     clses = tl_clses.contiguous().view(batch, -1, 1).float()
-    
-    ht_score_cls = torch.cat((ht_scores, clses), dim = -1)
-    pos_inds = ht_boxes[:,:, -1] > 0
+
+    ht_score_cls = torch.cat((ht_scores, clses), dim=-1)
+    pos_inds = ht_boxes[:, :, -1] > 0
     pos_ht_score_cls = ht_score_cls[pos_inds]
-    
+
     pos_grouping_score_inds = grouping_scores >= gr_threshold
     ppos_ht_score_cls = pos_ht_score_cls[pos_grouping_score_inds]
-    #print(ppos_ht_score_cls[:,1].long())
-    #specific_rscores = region_scores.gather(1, ppos_ht_score_cls.long().unsqueeze(-1)).squeeze()
-    specific_rscores = region_scores.gather(1, ppos_ht_score_cls[:,1].long().unsqueeze(-1)).squeeze()
-    #specific_rscores[specific_rscores<0.1] = 0
-    
-    ppos_ht_score_cls[:,0] = (ppos_ht_score_cls[:,0] + 0.5)* (specific_rscores + 0.5) - 0.25
-    
-    pos_ht_score_cls[pos_grouping_score_inds] = ppos_ht_score_cls
-    
-    ht_scores[pos_inds] = pos_ht_score_cls[:,:1]
 
-    
+    specific_rscores = region_scores.gather(1, ppos_ht_score_cls[:, 1].long().unsqueeze(-1)).squeeze()
+    # specific_rscores[specific_rscores<0.1] = 0
+
+    ppos_ht_score_cls[:, 0] = (ppos_ht_score_cls[:, 0] + 0.5) * (specific_rscores + 0.5) - 0.25
+
+    pos_ht_score_cls[pos_grouping_score_inds] = ppos_ht_score_cls
+
+    ht_scores[pos_inds] = pos_ht_score_cls[:, :1]
+
+
 def _decode(
-    tl_regr, br_regr, ht_boxes, all_groupings, tlbr_inds, tlbr_scores, tl_clses, gr_threshold,
-    K=100, kernel=1, ae_threshold=1, num_dets=1000, ratios = 0
+        tl_regr, br_regr, ht_boxes, all_groupings, tlbr_inds, tlbr_scores, tl_clses, gr_threshold,
+        K=100, kernel=1, ae_threshold=1, num_dets=1000, ratios=0
 ):
     batch = tl_regr.size(0)
 
-#    bboxes = ht_boxes[:,:,:4]
-#    batch = tl_regr.size(0)
-    print(tl_regr.shape)
-    bboxes = ht_boxes[:,:,:4]
-    print(ht_boxes.shape)
+    bboxes = ht_boxes[:, :, :4]
 
-    tl_ys = bboxes.view(batch, K, K, -1)[:,:,:,1]
-    tl_xs = bboxes.view(batch, K, K, -1)[:,:,:,0]
-    br_ys = bboxes.view(batch, K, K, -1)[:,:,:,3]
-    br_xs = bboxes.view(batch, K, K, -1)[:,:,:,2]
-    
-    scores = ht_boxes[:,:,-1].unsqueeze(-1)
-    
-    tl_inds = tlbr_inds[:batch,:]
-    br_inds = tlbr_inds[batch:,:]
-    
-    tl_scores = tlbr_scores[:batch,...]
-    br_scores = tlbr_scores[batch:,...]
+    tl_ys = bboxes.view(batch, K, K, -1)[:, :, :, 1]
+    tl_xs = bboxes.view(batch, K, K, -1)[:, :, :, 0]
+    br_ys = bboxes.view(batch, K, K, -1)[:, :, :, 3]
+    br_xs = bboxes.view(batch, K, K, -1)[:, :, :, 2]
+
+    scores = ht_boxes[:, :, -1].unsqueeze(-1)
+
+    tl_inds = tlbr_inds[:batch, :]
+    br_inds = tlbr_inds[batch:, :]
+
+    tl_scores = tlbr_scores[:batch, ...]
+    br_scores = tlbr_scores[batch:, ...]
 
     if tl_regr is not None and br_regr is not None:
         tl_regr = _tranpose_and_gather_feat(tl_regr, tl_inds)
@@ -205,7 +215,7 @@ def _decode(
 
     # all possible boxes based on top k corners (ignoring class)
     bboxes = torch.stack((tl_xs, tl_ys, br_xs, br_ys), dim=3)
-    
+
     all_groupings = all_groupings.view(batch, K, K)
     dist_inds = (all_groupings < gr_threshold)
 
@@ -217,25 +227,26 @@ def _decode(
 
     bboxes = bboxes.view(batch, -1, 4)
     bboxes = _gather_feat(bboxes, inds)
-    
-    clses  = tl_clses.contiguous().view(batch, -1, 1)
-    clses  = _gather_feat(clses, inds).float()
+
+    clses = tl_clses.contiguous().view(batch, -1, 1)
+    clses = _gather_feat(clses, inds).float()
 
     tl_scores = tl_scores.contiguous().view(batch, -1, 1)
     tl_scores = _gather_feat(tl_scores, inds).float()
     br_scores = br_scores.contiguous().view(batch, -1, 1)
     br_scores = _gather_feat(br_scores, inds).float()
-    
+
     detections = torch.cat([bboxes, scores, tl_scores, br_scores, clses], dim=2)
-    
+
     return detections
 
+
 def _generate_bboxes(
-    decode_inputs, K=70, kernel=3
+        decode_inputs, K=70, kernel=3
 ):
-    tl_heat   = decode_inputs[0]
-    br_heat   = decode_inputs[1]
-    
+    tl_heat = decode_inputs[0]
+    br_heat = decode_inputs[1]
+
     batch, cat, height, width = tl_heat.size()
 
     tl_heat = torch.sigmoid(tl_heat)
@@ -255,10 +266,10 @@ def _generate_bboxes(
 
     # all possible boxes based on top k corners (ignoring class)
     bboxes = torch.stack((tl_xs, tl_ys, br_xs, br_ys), dim=3)
-    
+
     tl_scores = tl_scores.view(batch, K, 1).expand(batch, K, K)
     br_scores = br_scores.view(batch, 1, K).expand(batch, K, K)
-    scores   = (tl_scores + br_scores) / 2
+    scores = (tl_scores + br_scores) / 2
 
     # reject boxes based on classes
     tl_clses = tl_clses.view(batch, K, 1).expand(batch, K, K)
@@ -266,28 +277,29 @@ def _generate_bboxes(
     cls_inds = (tl_clses != br_clses)
 
     # reject boxes based on widths and heights
-    width_inds   = (br_xs < tl_xs)
-    height_inds  = (br_ys < tl_ys)
-    
+    width_inds = (br_xs < tl_xs)
+    height_inds = (br_ys < tl_ys)
+
     neg_inds = cls_inds | width_inds | height_inds
     scores -= neg_inds.float()
 
-    #scores[cls_inds]    = -1
-    #scores[width_inds]   = -1
-    #scores[height_inds]  = -1
+    # scores[cls_inds]    = -1
+    # scores[width_inds]   = -1
+    # scores[height_inds]  = -1
 
     scores = scores.view(batch, -1)
     scores = scores.unsqueeze(2)
 
     bboxes = bboxes.view(batch, -1, 4)
     detections = torch.cat([bboxes, scores], dim=2)
-    
+
     return detections, torch.cat([tl_inds, br_inds], dim=0), torch.cat([tl_scores, br_scores], dim=0), tl_clses
+
 
 def _neg_loss(preds, gt):
     pos_inds = gt.eq(1)
     neg_inds = gt.lt(1)
-        
+
     neg_weights = torch.pow(1 - gt[neg_inds], 4)
 
     loss = 0
@@ -306,15 +318,17 @@ def _neg_loss(preds, gt):
             loss = loss - neg_loss
         else:
             loss = loss - (pos_loss + neg_loss) / num_pos
-        
+
     return loss
 
+
 def _sigmoid(x):
-    x = torch.clamp(x.sigmoid_(), min=1e-4, max=1-1e-4)
+    x = torch.clamp(x.sigmoid_(), min=1e-4, max=1 - 1e-4)
     return x
 
+
 def _ae_loss(tag0, tag1, mask):
-    num  = mask.sum(dim=1, keepdim=True).float()
+    num = mask.sum(dim=1, keepdim=True).float()
     tag0 = tag0.squeeze()
     tag1 = tag1.squeeze()
 
@@ -328,7 +342,7 @@ def _ae_loss(tag0, tag1, mask):
 
     mask = mask.unsqueeze(1) + mask.unsqueeze(2)
     mask = mask.eq(2)
-    num  = num.unsqueeze(2)
+    num = num.unsqueeze(2)
     num2 = (num - 1) * num
     dist = tag_mean.unsqueeze(1) - tag_mean.unsqueeze(2)
     dist = 1 - torch.abs(dist)
@@ -341,27 +355,29 @@ def _ae_loss(tag0, tag1, mask):
 
 
 def _regr_loss(regr, gt_regr, mask):
-    num  = mask.float().sum()
+    num = mask.float().sum()
     mask = mask.unsqueeze(2).expand_as(gt_regr)
 
-    regr    = regr[mask]
+    regr = regr[mask]
     gt_regr = gt_regr[mask]
-    
+
     regr_loss = nn.functional.smooth_l1_loss(regr, gt_regr, size_average=False)
     regr_loss = regr_loss / (num + 1e-4)
     return regr_loss
 
+
 def _regr_l1_loss(regr, gt_regr, mask):
-    num  = mask.float().sum()
+    num = mask.float().sum()
     mask = mask.unsqueeze(2).expand_as(gt_regr).float()
 
-    #regr    = regr[mask]
-    #gt_regr = gt_regr[mask]
-    
-    #regr_loss = nn.functional.smooth_l1_loss(regr, gt_regr, size_average=False)
+    # regr    = regr[mask]
+    # gt_regr = gt_regr[mask]
+
+    # regr_loss = nn.functional.smooth_l1_loss(regr, gt_regr, size_average=False)
     regr_loss = F.l1_loss(regr * mask, gt_regr * mask, size_average=False)
     regr_loss = regr_loss / (num + 1e-4)
     return regr_loss
+
 
 def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
     """Calculate overlap between two set of bboxes.
@@ -397,11 +413,11 @@ def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
         wh = (rb - lt + 1).clamp(min=0)  # [rows, 2]
         overlap = wh[:, 0] * wh[:, 1]
         area1 = (bboxes1[:, 2] - bboxes1[:, 0] + 1) * (
-            bboxes1[:, 3] - bboxes1[:, 1] + 1)
+                bboxes1[:, 3] - bboxes1[:, 1] + 1)
 
         if mode == 'iou':
             area2 = (bboxes2[:, 2] - bboxes2[:, 0] + 1) * (
-                bboxes2[:, 3] - bboxes2[:, 1] + 1)
+                    bboxes2[:, 3] - bboxes2[:, 1] + 1)
             ious = overlap / (area1 + area2 - overlap)
         else:
             ious = overlap / area1
@@ -412,11 +428,11 @@ def bbox_overlaps(bboxes1, bboxes2, mode='iou', is_aligned=False):
         wh = (rb - lt + 1).clamp(min=0)  # [rows, cols, 2]
         overlap = wh[:, :, 0] * wh[:, :, 1]
         area1 = (bboxes1[:, 2] - bboxes1[:, 0] + 1) * (
-            bboxes1[:, 3] - bboxes1[:, 1] + 1)
+                bboxes1[:, 3] - bboxes1[:, 1] + 1)
 
         if mode == 'iou':
             area2 = (bboxes2[:, 2] - bboxes2[:, 0] + 1) * (
-                bboxes2[:, 3] - bboxes2[:, 1] + 1)
+                    bboxes2[:, 3] - bboxes2[:, 1] + 1)
             ious = overlap / (area1[:, None] + area2 - overlap)
         else:
             ious = overlap / (area1[:, None])
