@@ -758,7 +758,7 @@ class DLASeg(nn.Module):
                 print("-"*51)
                 print("more than one")
                 print(f"ht_boxes shape before {ht_boxes.shape}")
-                 _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, self.gr_threshold)
+                _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, self.gr_threshold)
                 print(f"ht_boxes shape after filtering {ht_boxes.shape}")
                 print("-" * 50)
             if no_flip:
