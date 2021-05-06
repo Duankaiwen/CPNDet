@@ -46,7 +46,7 @@
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
-        "max_per_image": 40,
+        "max_per_image": 50,
         
         "featmap_strides": 1,
         "roi_sample_num": 1,

@@ -188,7 +188,7 @@ def _decode(
     batch = tl_regr.size(0)
 
     bboxes = ht_boxes[:, :, :4]
-
+    print(bboxes.shape)
     tl_ys = bboxes.view(batch, K, K, -1)[:, :, :, 1]
     tl_xs = bboxes.view(batch, K, K, -1)[:, :, :, 0]
     br_ys = bboxes.view(batch, K, K, -1)[:, :, :, 3]
