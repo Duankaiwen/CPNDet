@@ -10,14 +10,14 @@
         "learning_rate": 0.003,
         "decay_rate": 10,
 
-        "val_iter": 100,
+        "val_iter": 500,
 
         "opt_algo": "adam",
         "prefetch_size": 10,
 
         "max_iter": 30000,
         "stepsize": 20000,
-        "snapshot": 100,
+        "snapshot": 5000,
 
         "chunk_sizes": [10,10],
         
@@ -41,12 +41,12 @@
 
         "test_scales": [1],
 
-        "top_k": 50,
+        "top_k": 70,
         "categories": 11,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
-        "max_per_image": 40,
+        "max_per_image": 100,
         
         "featmap_strides": 1,
         "roi_sample_num": 1,
