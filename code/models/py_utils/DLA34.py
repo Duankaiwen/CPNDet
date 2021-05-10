@@ -755,12 +755,12 @@ class DLASeg(nn.Module):
             region_scores    = _sigmoid(region_scores)
 
             if grouping_inds.float().sum() > 1:
-                print("-"*51)
-                print("more than one")
-                print(f"ht_boxes shape before {ht_boxes.shape}")
+                #print("-"*51)
+                #print("more than one")
+                #print(f"ht_boxes shape before {ht_boxes.shape}")
                 _filter_bboxes(ht_boxes, tl_clses, region_scores, grouping_scores, self.gr_threshold)
-                print(f"ht_boxes shape after filtering {ht_boxes.shape}")
-                print("-" * 50)
+                #print(f"ht_boxes shape after filtering {ht_boxes.shape}")
+                #print("-" * 50)
             if no_flip:
                 all_groupings[score_inds_list[0]] = grouping_scores[:,0,0,0]
             else:
@@ -768,10 +768,10 @@ class DLASeg(nn.Module):
 
 
             outs += [ht_boxes, all_groupings, tlbr_inds, tlbr_scores, tl_clses, self.gr_threshold]
-            print(f"layer ind {ind}-- ht_boxes shape: {ht_boxes.shape}")
-        print("------------")
-        print('attempting to decode')
-        print('--------------')
+            #print(f"layer ind {ind}-- ht_boxes shape: {ht_boxes.shape}")
+        #print("------------")
+        #print('attempting to decode')
+        #print('--------------')
         return self._decode(*outs[-8:], **kwargs)
     
     def forward(self, *xs, **kwargs):
