@@ -160,8 +160,8 @@ class MSCOCO(DETECTION):
         return detections
 
     def evaluate(self, result_json, cls_ids, image_ids, gt_json=None):
-        if self._split == "testdev":
-            return None
+        # if self._split == "testdev":
+        #     return None
 
         coco = self._coco if gt_json is None else COCO(gt_json)
 
