@@ -329,8 +329,10 @@ def kp_detection(db, cfg_file, nnet, result_dir, debug=False, no_flip = False, d
     
     result_json = os.path.join(result_dir, "results.json")
     detections  = db.convert_to_coco(top_bboxes)
+    print(f"len detections: {len(detections}")
     with open(result_json, "w") as f:
         json.dump(detections, f)
+        print('saving results.json')
         
     cls_ids   = list(range(1, categories + 1))
     image_ids = [db.image_ids(ind) for ind in db_inds]
