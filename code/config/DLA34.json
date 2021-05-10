@@ -1,7 +1,7 @@
 {
     "system": {
         "dataset": "MSCOCO",
-        "batch_size": 20,
+        "batch_size": 32,
         "sampling_function": "kp_detection",
 
         "train_split": "trainval",
@@ -13,13 +13,13 @@
         "val_iter": 100,
 
         "opt_algo": "adam",
-        "prefetch_size": 10,
+        "prefetch_size": 15,
 
         "max_iter": 2000,
         "stepsize": 1000,
         "snapshot": 500,
 
-        "chunk_sizes": [10,10],
+        "chunk_sizes": [16,16],
         
         "data_dir": "./data"
     },
@@ -41,12 +41,12 @@
 
         "test_scales": [1],
 
-        "top_k": 50,
+        "top_k": 70,
         "categories": 11,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
-        "max_per_image": 50,
+        "max_per_image": 100,
         
         "featmap_strides": 1,
         "roi_sample_num": 1,
