@@ -178,4 +178,4 @@ class MSCOCO(DETECTION):
         #coco_eval.evaluate_fd()
         #coco_eval.accumulate_fd()
         #coco_eval.summarize_fd()
-        return coco_eval.stats[0], coco_eval.stats[12:]
+        return coco_eval.stats#coco_eval.stats[0], coco_eval.stats[12:]

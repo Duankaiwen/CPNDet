@@ -336,8 +336,11 @@ def kp_detection(db, cfg_file, nnet, result_dir, debug=False, no_flip = False, d
         
     cls_ids   = list(range(1, categories + 1))
     image_ids = [db.image_ids(ind) for ind in db_inds]
-    db.evaluate(result_json, cls_ids, image_ids)    
-
+    coco_stats = db.evaluate(result_json, cls_ids, image_ids)
+    # save to file
+    print("--"*50)
+    print(type(coco_stats))
+    print(coco_stats)
     return 0
 
 def testing(db, cfg_file, nnet, result_dir, debug=False, no_flip = False):
