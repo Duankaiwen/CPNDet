@@ -124,7 +124,7 @@ class Config:
 
     @property
     def snapshot_file(self):
-        name = "{}_{}_{}class_{}.pkl".format(self.snapshot_dir,
+        name = "{}_{}_{}class_{}.pkl".format(self.snapshot_name,
                                          self._configs["interpolation_mode"],
                                          self._configs["categories"], {})
 
