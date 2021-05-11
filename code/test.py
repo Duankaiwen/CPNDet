@@ -68,7 +68,7 @@ def test(db, cfg_file, split, testiter, debug=False, no_flip = False, suffix=Non
     else:
         print("CUDA is not available")
     nnet.eval_mode()
-    testing(db, cfg_file , nnet, result_dir, csv_dir, testiter, debug=debug, no_flip = no_flip)
+    testing(db, cfg_file , nnet, result_dir, csv_dir, test_iter, debug=debug, no_flip = no_flip)
 
 if __name__ == "__main__":
     args = parse_args()
