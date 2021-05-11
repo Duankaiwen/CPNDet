@@ -184,7 +184,7 @@ def post_process(db, debug, num_images, weight_exp, merge_bbox, categories,
 
     top_bboxes_queue.put(top_bboxes)
     
-def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, testiter, debug=False, no_flip = False, decode_func=kp_decode):
+def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, test_iter, debug=False, no_flip = False, decode_func=kp_decode):
     image_idx = 0
     debug_dir = os.path.join(result_dir, "debug")
     if not os.path.exists(debug_dir):
@@ -341,7 +341,7 @@ def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, testiter, debug=False,
     coco_stats = db.evaluate(result_json, cls_ids, image_ids)
     # save to file
 
-    stat_dict = get_other_stats(db, average_FPS, cfg_file)
+    stat_dict = get_other_stats(db, average_FPS, cfg_file, test_iter)
     res_df = merge_stats(coco_stats, stat_dict)
     res_df.save_csv(os.path.join(csv_dir, f"{cfg_file}_{time.time()}.csv"))
     return 0
@@ -363,7 +363,7 @@ def merge_stats(coco_stats, stat_dict):
 
     return pd.DataFrame(final_dict)
 
-def get_other_stats(db, average_FPS, cfg_file, testiter):
+def get_other_stats(db, average_FPS, cfg_file, test_iter):
     """
     Function that takes db.configs, device(CUDA or no CUDA) and returns df
     to be merged with COCO stats
@@ -385,7 +385,7 @@ def get_other_stats(db, average_FPS, cfg_file, testiter):
             "Model"         : ["CPNDET"],
             "Backbone"      : [cfg_file],
             "Interpolation" : [db.configs['interpolation_mode']],
-            "Snapshot"      : [testiter],
+            "Snapshot"      : [test_iter],
             "FPS"           : [average_FPS],
             "Split"         : [db.split],
             "DeviceType"    : [device_type],
@@ -394,5 +394,5 @@ def get_other_stats(db, average_FPS, cfg_file, testiter):
 
 
 
-def testing(db, cfg_file, nnet, result_dir, debug=False, no_flip = False):
-    return globals()[system_configs.sampling_function](db, cfg_file, nnet, result_dir, debug=debug, no_flip=no_flip)
+def testing(db, cfg_file, nnet, result_dir, csv_dir, test_iter, debug=False, no_flip = False):
+    return globals()[system_configs.sampling_function](db, cfg_file, nnet, result_dir, csv_dir, test_iter, debug=debug, no_flip=no_flip)
