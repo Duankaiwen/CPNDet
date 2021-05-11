@@ -471,7 +471,7 @@ class DLASeg(nn.Module):
         self.kernel           = self._db.configs["nms_kernel"]
         self.gr_threshold     = self._db.configs["gr_threshold"]
         self.categories       = self._db.configs["categories"]
-        
+        self.mode = self._db.configs["interpolation_mode"]
         self.grouping_roi_extractor = builder.build_roi_extractor(Config(self._db._model['grouping_roi_extractor']).item)
         self.region_roi_extractor   = builder.build_roi_extractor(Config(self._db._model['region_roi_extractor']).item)
         

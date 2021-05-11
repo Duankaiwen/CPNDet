@@ -110,7 +110,7 @@ class model(hg52):
         n       = 5
         dims    = [256, 256, 384, 384, 384, 512]
         modules = [2, 2, 2, 2, 2, 4]
-        out_dim = 11 # TODO: fix this hardcoding
+        out_dim = db.configs['categories']
 
         super(model, self).__init__(
             db, n, 1, dims, modules, out_dim,

@@ -51,7 +51,7 @@
         "featmap_strides": 1,
         "roi_sample_num": 1,
         "gr_threshold": 0.2,
-        
+        "interpolation_mode": "bilinear",
         "merge_bbox": true,
         "weight_exp": 10
     }

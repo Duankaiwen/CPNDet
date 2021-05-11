@@ -15,6 +15,7 @@ class DETECTION(BASE):
         self._configs["input_size"]     = [511]
         self._configs["output_sizes"]   = [[128, 128]]
 
+        self._configs["interpolation_mode"] = "nearest"
         self._configs["nms_threshold"]  = 0.5
         self._configs["max_per_image"]  = 100
         self._configs["top_k"]          = 100

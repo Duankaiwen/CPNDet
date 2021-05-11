@@ -50,8 +50,8 @@ def make_pool_layer(dim):
     return nn.MaxPool2d(kernel_size=2, stride=2)
 
 
-def make_unpool_layer(dim):
-    return nn.Upsample(scale_factor=2, mode='bilinear')
+def make_unpool_layer(dim, mode):
+    return nn.Upsample(scale_factor=2, mode=mode)
 
 
 def make_kp_layer(cnv_dim, curr_dim, out_dim):

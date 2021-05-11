@@ -81,7 +81,7 @@ class kp_module(nn.Module):
             3, next_dim, curr_dim, curr_mod,
             layer=layer, **kwargs
         )
-        self.up2  = make_unpool_layer(curr_dim)
+        self.up2  = make_unpool_layer(curr_dim, mode=self.mode)
 
         self.merge = make_merge_layer(curr_dim)
 
@@ -118,7 +118,7 @@ class hg104(nn.Module):
         self.kernel            = self._db.configs["nms_kernel"]
         self.gr_threshold      = self._db.configs["gr_threshold"]
         self.categories        = self._db.configs["categories"]
-        
+        self.mode = self._db.configs["interpolation_mode"]
         self.grouping_roi_extractor = builder.build_roi_extractor(Config(self._db._model['grouping_roi_extractor']).item)
         self.region_roi_extractor   = builder.build_roi_extractor(Config(self._db._model['region_roi_extractor']).item)
         

@@ -24,7 +24,7 @@ class Config:
         self._configs["pretrain"]          = None
         self._configs["opt_algo"]          = "adam"
         self._configs["chunk_sizes"]       = None
-
+        self._configs["interpolation_mode"] = "nearest"
         # Directories
         self._configs["data_dir"]   = "/cache"
         self._configs["cache_dir"]  = "../cache"
@@ -123,7 +123,11 @@ class Config:
 
     @property
     def snapshot_file(self):
-        snapshot_file = os.path.join(self.snapshot_dir, self.snapshot_name + "_{}.pkl")
+        name = f"{}_{}_{}class_{}.pkl".format(self.snapshot_dir,
+                                         self._configs["interpolation_mode"],
+                                         self._configs["categories"])
+
+        snapshot_file = os.path.join(self.snapshot_dir, name)
         return snapshot_file
 
     @property
