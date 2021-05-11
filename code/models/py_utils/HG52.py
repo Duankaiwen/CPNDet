@@ -37,7 +37,7 @@ from .kp_utils import _tranpose_and_gather_feat, _decode, _generate_bboxes, _htb
 
 class kp_module(nn.Module):
     def __init__(
-        self, n, dims, modules, layer=residual,
+        self, n, dims, modules, mode,  layer=residual,
         make_up_layer=make_layer, make_low_layer=make_layer,
         make_hg_layer=make_layer, make_hg_layer_revr=make_layer_revr,
         make_pool_layer=make_pool_layer, make_unpool_layer=make_unpool_layer,
@@ -46,6 +46,7 @@ class kp_module(nn.Module):
         super(kp_module, self).__init__()
 
         self.n   = n
+        self.mode = mode
 
         curr_mod = modules[0]
         next_mod = modules[1]
@@ -71,6 +72,7 @@ class kp_module(nn.Module):
             make_pool_layer=make_pool_layer,
             make_unpool_layer=make_unpool_layer,
             make_merge_layer=make_merge_layer,
+            mode=self.mode,
             **kwargs
         ) if self.n > 1 else \
         make_low_layer(
@@ -136,7 +138,7 @@ class hg52(nn.Module):
 
         self.kps  = nn.ModuleList([
             kp_module(
-                n, dims, modules, layer=kp_layer,
+                n, dims, modules, self.mode, layer=kp_layer,
                 make_up_layer=make_up_layer,
                 make_low_layer=make_low_layer,
                 make_hg_layer=make_hg_layer,
