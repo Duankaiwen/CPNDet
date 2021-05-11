@@ -184,7 +184,7 @@ def post_process(db, debug, num_images, weight_exp, merge_bbox, categories,
 
     top_bboxes_queue.put(top_bboxes)
     
-def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, debug=False, no_flip = False, decode_func=kp_decode):
+def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, testiter, debug=False, no_flip = False, decode_func=kp_decode):
     image_idx = 0
     debug_dir = os.path.join(result_dir, "debug")
     if not os.path.exists(debug_dir):
@@ -363,13 +363,14 @@ def merge_stats(coco_stats, stat_dict):
 
     return pd.DataFrame(final_dict)
 
-def get_other_stats(db, average_FPS, cfg_file):
+def get_other_stats(db, average_FPS, cfg_file, testiter):
     """
     Function that takes db.configs, device(CUDA or no CUDA) and returns df
     to be merged with COCO stats
     :param: db
     :param: average_FPS
     :cfg_file: model name (DLA34, HG52, HG104)
+    :testiter: snapshot testing iteration
     :returns dict:
     """
     if torch.cuda.is_available():
@@ -384,7 +385,7 @@ def get_other_stats(db, average_FPS, cfg_file):
             "Model"         : ["CPNDET"],
             "Backbone"      : [cfg_file],
             "Interpolation" : [db.configs['interpolation_mode']],
-            "Snapshot"      : [db.testiter],
+            "Snapshot"      : [testiter],
             "FPS"           : [average_FPS],
             "Split"         : [db.split],
             "DeviceType"    : [device_type],

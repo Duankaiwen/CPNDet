@@ -31,6 +31,7 @@ class MSCOCO(DETECTION):
         self._coco_dir = os.path.join(data_dir, "coco")
 
         self._label_dir  = os.path.join(self._coco_dir, "annotations")
+        #TO DO: fix hardcoding name
         self._label_file = os.path.join(self._label_dir, "11classes_v1.0_{}.json")
         self._label_file = self._label_file.format(self._dataset)
 

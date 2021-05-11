@@ -68,7 +68,7 @@ def test(db, cfg_file, split, testiter, debug=False, no_flip = False, suffix=Non
     else:
         print("CUDA is not available")
     nnet.eval_mode()
-    testing(db, cfg_file , nnet, result_dir, csv_dir, debug=debug, no_flip = no_flip)
+    testing(db, cfg_file , nnet, result_dir, csv_dir, testiter, debug=debug, no_flip = no_flip)
 
 if __name__ == "__main__":
     args = parse_args()
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print("loading all datasets...")
     dataset = system_configs.dataset
     print("split: {}".format(split))
-    testing_db = datasets[dataset](configs["db"], split, args.testiter)
+    testing_db = datasets[dataset](configs["db"], split)
 
     print("system config...")
     pprint.pprint(system_configs.full)
