@@ -43,9 +43,9 @@ def make_dirs(directories):
             os.makedirs(directory)
 
 def test(db, cfg_file, split, testiter, debug=False, no_flip = False, suffix=None): 
-    result_dir = system_configs.result_dir
+    result_dir = csv_dir = system_configs.result_dir
     result_dir = os.path.join(result_dir, str(testiter), split)
-    csv_dir = os.path.join(result_dir, "csv_results")
+    # csv_dir = os.path.join(result_dir, "csv_results")
 
     if suffix is not None:
         result_dir = os.path.join(result_dir, suffix)
