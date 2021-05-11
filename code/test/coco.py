@@ -323,8 +323,8 @@ def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, testiter, debug=False,
     
     top_bboxes = top_bboxes_queue.get(block=True)   
     elapsed = time.time() - start
-    average_FPS = round(num_images/elapsed, 2))
-    print('Average FPS: {}\n'.format(average_FPS)
+    average_FPS = round(num_images/elapsed, 2)
+    print('Average FPS: {}\n'.format(average_FPS))
     
     im_process_task.terminate()
     post_process_task.terminate()
