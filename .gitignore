@@ -1,6 +1,6 @@
 env/
 .pyc*
-cache/nnet/*
+cache/*
 results/*
 
 # Byte-compiled / optimized / DLL files
