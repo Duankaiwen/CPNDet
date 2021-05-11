@@ -25,6 +25,7 @@ class Config:
         self._configs["opt_algo"]          = "adam"
         self._configs["chunk_sizes"]       = None
         self._configs["interpolation_mode"] = "nearest"
+        self._configs["categories"] = 2
         # Directories
         self._configs["data_dir"]   = "/cache"
         self._configs["cache_dir"]  = "../cache"
