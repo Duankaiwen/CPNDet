@@ -343,7 +343,7 @@ def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, test_iter, debug=False
 
     stat_dict = get_other_stats(db, average_FPS, cfg_file, test_iter)
     res_df = merge_stats(coco_stats, stat_dict)
-    res_df.save_csv(os.path.join(csv_dir, f"{cfg_file}_{time.time()}.csv"))
+    res_df.to_csv(os.path.join(csv_dir, f"{cfg_file}_{time.time()}.csv"))
     return 0
 
 def merge_stats(coco_stats, stat_dict):
