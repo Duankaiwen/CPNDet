@@ -80,6 +80,7 @@ if __name__ == "__main__":
             
     configs["system"]["snapshot_name"] = args.cfg_file
     system_configs.update_config(configs["system"])
+    system_configs.update_config(configs["db"])
 
     train_split = system_configs.train_split
     val_split   = system_configs.val_split
