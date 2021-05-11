@@ -30,6 +30,7 @@ import torch
 import matplotlib
 import numpy as np
 from tqdm import tqdm
+import pandas as pd
 import matplotlib.pyplot as plt
 from config import system_configs
 from utils import crop_image, normalize_
@@ -183,7 +184,7 @@ def post_process(db, debug, num_images, weight_exp, merge_bbox, categories,
 
     top_bboxes_queue.put(top_bboxes)
     
-def kp_detection(db, cfg_file, nnet, result_dir, debug=False, no_flip = False, decode_func=kp_decode):
+def kp_detection(db, cfg_file, nnet, result_dir, csv_dir, debug=False, no_flip = False, decode_func=kp_decode):
     image_idx = 0
     debug_dir = os.path.join(result_dir, "debug")
     if not os.path.exists(debug_dir):
@@ -322,7 +323,8 @@ def kp_detection(db, cfg_file, nnet, result_dir, debug=False, no_flip = False, d
     
     top_bboxes = top_bboxes_queue.get(block=True)   
     elapsed = time.time() - start
-    print('Average FPS: {}\n'.format(round(num_images/elapsed, 2)))
+    average_FPS = round(num_images/elapsed, 2))
+    print('Average FPS: {}\n'.format(average_FPS)
     
     im_process_task.terminate()
     post_process_task.terminate()
@@ -338,10 +340,58 @@ def kp_detection(db, cfg_file, nnet, result_dir, debug=False, no_flip = False, d
     image_ids = [db.image_ids(ind) for ind in db_inds]
     coco_stats = db.evaluate(result_json, cls_ids, image_ids)
     # save to file
-    print("--"*50)
-    print(type(coco_stats))
-    print(coco_stats)
+
+    stat_dict = get_other_stats(db, average_FPS, cfg_file)
+    res_df = merge_stats(coco_stats, stat_dict)
+    res_df.save_csv(os.path.join(csv_dir, f"{cfg_file}_{time.time()}.csv"))
     return 0
+
+def merge_stats(coco_stats, stat_dict):
+    """
+    :param: coco_stats (numpy array of size 12)
+    :param: stat_dict is a dict with stats about the model, GPU/CPU, FPS etc (8 fields)
+    :return df:
+    """
+    final_dict = {"AP @[IoU=0.50:0.95|area=all|maxDets=10]": coco_stats[0],
+                  "AP @[IoU=0.5|area=all|maxDets=100]": coco_stats[1],
+                  "AP @[IoU=0.5|area=all|maxDets=100]": coco_stats[2],
+                  "AR @[IoU=0.50:0.95|area=all|maxDets=10]": coco_stats[7],
+                  "AR @[IoU=0.50:0.95|area=all|maxDets=100]": coco_stats[8],
+    }
+
+    final_dict = {**final_dict, **stat_dict}
+
+    return pd.DataFrame(final_dict)
+
+def get_other_stats(db, average_FPS, cfg_file):
+    """
+    Function that takes db.configs, device(CUDA or no CUDA) and returns df
+    to be merged with COCO stats
+    :param: db
+    :param: average_FPS
+    :cfg_file: model name (DLA34, HG52, HG104)
+    :returns dict:
+    """
+    if torch.cuda.is_available():
+        device_type='GPU'
+        curr_device = torch.cuda.current_device()
+        device_name = torch.cuda.get_device_name(curr_device)
+    else:
+        device_type = 'CPU'
+        device_name = "N/A"
+
+    return {"Dataset"       : ["{}class".format(db.configs['categories'])],
+            "Model"         : ["CPNDET"],
+            "Backbone"      : [cfg_file],
+            "Interpolation" : [db.configs['interpolation_mode']],
+            "Snapshot"      : [db.testiter],
+            "FPS"           : [average_FPS],
+            "Split"         : [db.split],
+            "DeviceType"    : [device_type],
+            "DeviceName"    : [device_name]
+            }
+
+
 
 def testing(db, cfg_file, nnet, result_dir, debug=False, no_flip = False):
     return globals()[system_configs.sampling_function](db, cfg_file, nnet, result_dir, debug=debug, no_flip=no_flip)
