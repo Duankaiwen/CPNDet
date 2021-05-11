@@ -47,9 +47,8 @@ class MSCOCO(DETECTION):
             [-0.5832747, 0.00994535, -0.81221408],
             [-0.56089297, 0.71832671, 0.41158938]
         ], dtype=np.float32)
-        self._cat_ids = [
-            list(range(db_config['categories']))
-        ]
+        self._cat_ids = list(range(db_config['categories']))
+
         self._classes = {
             ind + 1: cat_id for ind, cat_id in enumerate(self._cat_ids)
         }
