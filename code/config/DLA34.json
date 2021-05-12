@@ -42,7 +42,7 @@
         "test_scales": [1],
 
         "top_k": 70,
-        "categories": 11,
+        "categories": 2,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
