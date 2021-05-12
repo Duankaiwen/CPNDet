@@ -87,7 +87,9 @@ def kp_detection(db, k_ind, data_aug, debug):
 
         # reading image
         image_file = db.image_file(db_ind)
+        print(image_file)
         image      = cv2.imread(image_file)
+        print(type(image))
 
         # reading detections
         detections = db.detections(db_ind)
