@@ -17,7 +17,7 @@
 
         "max_iter": 30000,
         "stepsize": 20000,
-        "snapshot": 50,
+        "snapshot": 5,
 
         "chunk_sizes": [6,6],
 
