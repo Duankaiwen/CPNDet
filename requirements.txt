@@ -13,4 +13,5 @@ six==1.15.0
 terminaltables==3.1.0
 tqdm==4.59.0
 yapf==0.31.0
+pandas==1.1.5
 
