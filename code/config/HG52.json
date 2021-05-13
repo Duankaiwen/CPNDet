@@ -15,8 +15,8 @@
         "opt_algo": "adam",
         "prefetch_size": 10,
 
-        "max_iter": 30000,
-        "stepsize": 20000,
+        "max_iter": 20000,
+        "stepsize": 15000,
         "snapshot": 5000,
 
         "chunk_sizes": [10,10],
@@ -42,7 +42,7 @@
         "test_scales": [1],
 
         "top_k": 70,
-        "categories": 11,
+        "categories": 2,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
@@ -51,7 +51,7 @@
         "featmap_strides": 1,
         "roi_sample_num": 1,
         "gr_threshold": 0.2,
-        "interpolation_mode": "bicubic",
+        "interpolation_mode": "bilinear",
         "merge_bbox": true,
         "weight_exp": 10
     }

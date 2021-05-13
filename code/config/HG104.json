@@ -15,9 +15,9 @@
         "opt_algo": "adam",
         "prefetch_size": 6,
 
-        "max_iter": 30000,
-        "stepsize": 20000,
-        "snapshot": 5,
+        "max_iter": 20000,
+        "stepsize": 15000,
+        "snapshot": 5000,
 
         "chunk_sizes": [6,6],
 
@@ -42,7 +42,7 @@
         "test_scales": [1],
 
         "top_k": 70,
-        "categories": 11,
+        "categories": 2,
         "ae_threshold": 0.5,
         "iou_threshold": 0.7,
         "nms_threshold": 0.5,
