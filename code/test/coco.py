@@ -352,7 +352,9 @@ def merge_stats(coco_stats, stat_dict):
     :param: stat_dict is a dict with stats about the model, GPU/CPU, FPS etc (8 fields)
     :return df:
     """
-    print(coco_stats)
+    #print(coco_stats)
+    for ind, i in enumerate(coco_stats):
+        print(ind, i)
     final_dict = {"AP @[IoU=0.50:0.95|area=all|maxDets=10]": coco_stats[0],
                   "AP @[IoU=0.5|area=all|maxDets=100]": coco_stats[1],
                   "AP @[IoU=0.5|area=all|maxDets=100]": coco_stats[2],
