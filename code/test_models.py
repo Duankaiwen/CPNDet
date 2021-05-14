@@ -71,7 +71,11 @@ def main():
                     for split in splits:
                         strs = "python test.py --cfg_file {} --split {}".format(config_file.split(".json")[0],
                                                                                 split)
-
+                        print("-"*100)
+                        print("\n\n")
+                        print(strs)
+                        print("\n\n")
+                        print("-" * 100)
                         try:
                             os.remove("../cache/test.pkl")
                             os.remove("../cache/valid.pkl")
