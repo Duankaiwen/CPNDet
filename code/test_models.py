@@ -9,13 +9,13 @@ config_dict = {'DLA34.json':
                   },
                'HG52.json':
                    {'dataset':
-                       {'11class': ['bilinear'],
+                       {'11class': ['bilinear', 'bicubic'],
                         '2class' : ['bilinear'],
                        }
                    },
                'HG104.json':
                    {'dataset':
-                        {'11class': ['bilinear', 'bicubic'],
+                        {'11class': ['bilinear'],
                          '2class': ['bilinear'],
                          }
                     }
