@@ -74,6 +74,7 @@ def main():
 
                         try:
                             os.remove("../cache/test.pkl")
+                            os.remove("../cache/valid.pkl")
                         except FileNotFoundError:
                             print("no cache file detected")
                         os.system(strs)
