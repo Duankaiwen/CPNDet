@@ -38,9 +38,16 @@ class JSON_manipulator(object):
     def main(self, dataset, interpolation):
 
         self.read_file()
+        n_classes = int(dataset.split("class")[0])
 
-        self.data['db']['categories'] = int(dataset.split("class")[0])
+        self.data['db']['categories'] = n_classes
         self.data['db']['interpolation_mode'] = interpolation
+
+        # TO DO: un-hardcode this, instead infer from model names
+        if n_classes==11:
+            self.data['db']['max_iter'] = 30000
+        else:
+            self.data['db']['max_iter'] = 20000
 
         self.write_file()
 
@@ -62,7 +69,7 @@ def main():
                     J.main(dataset, interpolation)
                     # run script
                     for split in splits:
-                        strs = "python test.py --cfg_file {} --split {}".format(config_file.split(".json")[0],
+                        strs = "python test.py --cfg_file {} --testiter {} --split {}".format(config_file.split(".json")[0],
                                                                                 split
                                                                                 )
                         os.system(strs)
