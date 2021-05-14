@@ -78,9 +78,13 @@ def main():
                         print("-" * 100)
                         try:
                             os.remove("../cache/test.pkl")
+                        except FileNotFoundError:
+                            print("no test cache file detected")
+                        try:
                             os.remove("../cache/valid.pkl")
                         except FileNotFoundError:
-                            print("no cache file detected")
+                            print("no valid cache file detected")
+
                         os.system(strs)
 
 
