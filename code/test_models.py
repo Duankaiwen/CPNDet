@@ -69,7 +69,7 @@ def main():
                     J.main(dataset, interpolation)
                     # run script
                     for split in splits:
-                        strs = "python test.py --cfg_file {} --testiter {} --split {}".format(config_file.split(".json")[0],
+                        strs = "python test.py --cfg_file {} --split {}".format(config_file.split(".json")[0],
                                                                                 split
                                                                                 )
                         os.system(strs)
