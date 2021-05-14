@@ -9,7 +9,7 @@ config_dict = {'DLA34.json':
                   },
                'HG52.json':
                    {'dataset':
-                       {'11class': ['bilinear', 'bicubic'],
+                       {'11class': ['bilinear'],
                         '2class' : ['bilinear'],
                        }
                    },
@@ -72,7 +72,9 @@ def main():
                         strs = "python test.py --cfg_file {} --split {}".format(config_file.split(".json")[0],
                                                                                 split
                                                                                 )
+                        os.remove("../cache/test.pkl")
                         os.system(strs)
+
 
 
 if __name__ == '__main__':
