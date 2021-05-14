@@ -70,9 +70,12 @@ def main():
                     # run script
                     for split in splits:
                         strs = "python test.py --cfg_file {} --split {}".format(config_file.split(".json")[0],
-                                                                                split
-                                                                                )
-                        os.remove("../cache/test.pkl")
+                                                                                split)
+
+                        try:
+                            os.remove("../cache/test.pkl")
+                        except FileNotFoundError:
+                            print("no cache file detected")
                         os.system(strs)
 
 
