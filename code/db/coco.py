@@ -28,7 +28,7 @@ class MSCOCO(DETECTION):
             "testdev": "test"
         }[self._split]
         
-        self._coco_dir = os.path.join(data_dir, "coco")
+        self._coco_dir = os.path.join(data_dir, "coco/datasets/{}".format(db_config['categories']))
 
         self._label_dir  = os.path.join(self._coco_dir, "annotations")
         #TO DO: fix hardcoding name
