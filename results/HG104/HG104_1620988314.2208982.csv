@@ -1,0 +1,2 @@
+,AP @[IoU=0.50:0.95|area=all|maxDets=10],AP @[IoU=0.5|area=all|maxDets=100],AP @[IoU=0.75|area=all|maxDets=100],AR @[IoU=0.50:0.95|area=all|maxDets=10],AR @[IoU=0.50:0.95|area=all|maxDets=100],Dataset,Model,Backbone,Interpolation,Snapshot,FPS,Split,DeviceType,DeviceName
+0,0.6506703313937329,0.9311390123362601,0.7513028816191037,0.7055620450876474,0.7344068959246737,11class,CPNDET,HG104,bilinear,30000,5.69,minival,GPU,NVIDIA GeForce RTX 3090
